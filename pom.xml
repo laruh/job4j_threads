@@ -142,10 +142,10 @@
               <goal>shade</goal>
             </goals>
             <configuration>
-              <finalName>hello</finalName>
+              <finalName>wget</finalName>
               <transformers>
                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                  <mainClass>ru.job4j.App</mainClass>
+                  <mainClass>ru.job4j.thread.Wget</mainClass>
                 </transformer>
               </transformers>
             </configuration>
