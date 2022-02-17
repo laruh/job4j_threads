@@ -23,14 +23,19 @@ public class Wget implements Runnable {
             byte[] dataBuffer = new byte[1024];
             int bytesRead;
             long start = System.currentTimeMillis();
-            long left;
+            long interval;
+            int dataDownload = 0;
             while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {
+                dataDownload += bytesRead;
                 fileOutputStream.write(dataBuffer, 0, bytesRead);
-                left = System.currentTimeMillis() - start;
-                if (speed * left < 1024) {
-                    Thread.sleep(1000 - left);
+                if (dataDownload >= speed) {
+                    interval = System.currentTimeMillis() - start;
+                    if (interval < 1000) {
+                        Thread.sleep(1000 - interval);
+                        dataDownload = 0;
+                        start = System.currentTimeMillis();
+                    }
                 }
-                start = System.currentTimeMillis();
             }
         } catch (IOException | InterruptedException e) {
             Thread.currentThread().interrupt();
