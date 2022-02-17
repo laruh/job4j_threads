@@ -1,4 +1,4 @@
-package ru.job4j.net;
+package ru.job4j.concurrent.net;
 
 import java.io.*;
 import java.net.URL;
