@@ -32,9 +32,9 @@ public class Wget implements Runnable {
                     interval = System.currentTimeMillis() - start;
                     if (interval < 1000) {
                         Thread.sleep(1000 - interval);
-                        dataDownload = 0;
-                        start = System.currentTimeMillis();
                     }
+                    dataDownload = 0;
+                    start = System.currentTimeMillis();
                 }
             }
         } catch (IOException | InterruptedException e) {
