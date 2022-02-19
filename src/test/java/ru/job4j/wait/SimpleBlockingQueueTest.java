@@ -48,7 +48,6 @@ public class SimpleBlockingQueueTest {
         consumer.join();
         consumer1.interrupt();
         consumer1.join();
-
         assertThat(queue.poll(), equalTo(8));
     }
 
