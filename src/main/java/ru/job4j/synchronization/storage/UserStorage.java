@@ -9,45 +9,27 @@ public class UserStorage implements Storage, Transfer {
 
     @Override
     public synchronized boolean add(User user) {
-        boolean rsl = false;
-        if (!users.containsKey(user.getId())) {
-            users.put(user.getId(), user);
-            rsl = true;
-        }
-        return rsl;
+        return users.putIfAbsent(user.getId(), user) == null;
     }
 
     @Override
     public synchronized boolean update(User user) {
-        boolean rsl = false;
-        if (users.containsKey(user.getId())) {
-            users.get(user.getId()).setAmount(user.getAmount());
-            rsl = true;
-        }
-        return rsl;
+        return users.replace(user.getId(), user) != null;
     }
 
     @Override
     public synchronized boolean delete(User user) {
-        boolean rsl = false;
-        if (users.containsKey(user.getId())) {
-            users.remove(user.getId());
-            rsl = true;
-        }
-        return rsl;
+        return users.remove(user.getId(), user);
     }
 
     @Override
     public synchronized boolean transfer(int fromId, int toId, int amount) {
         boolean rsl = false;
-        if (users.containsKey(fromId) && users.containsKey(toId)
-                && users.get(fromId).getAmount() >= amount) {
-            User from = users.get(fromId);
-            User to = users.get(toId);
-            int amountFrom = from.getAmount() - amount;
-            int amountTo = to.getAmount() + amount;
-            from.setAmount(amountFrom);
-            to.setAmount(amountTo);
+        User from = users.get(fromId);
+        User to = users.get(toId);
+        if (from != null && to != null && from.getAmount() >= amount) {
+            from.setAmount(from.getAmount() - amount);
+            to.setAmount(to.getAmount() + amount);
             rsl = true;
         }
         return rsl;
