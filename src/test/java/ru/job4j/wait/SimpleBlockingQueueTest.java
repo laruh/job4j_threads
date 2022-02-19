@@ -84,4 +84,53 @@ public class SimpleBlockingQueueTest {
         consumer.join();
         assertThat(buffer, equalTo(Arrays.asList(0, 1, 2, 3, 4)));
     }
+
+    @Test
+    public void whenFetchWith2Consumers() throws InterruptedException {
+        final CopyOnWriteArrayList<Integer> buffer = new CopyOnWriteArrayList<>();
+        final SimpleBlockingQueue<Integer> queue = new SimpleBlockingQueue<>(10);
+        Thread producer = new Thread(
+                () -> {
+                    for (int i = 0; i < 10; i++) {
+                        try {
+                            queue.offer(i);
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                        }
+                    }
+                }
+        );
+        Thread consumer = new Thread(
+                () -> {
+                    while (!queue.isEmpty() || !Thread.currentThread().isInterrupted()) {
+                        try {
+                            buffer.add(queue.poll());
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                        }
+                    }
+                }
+        );
+        Thread consumer1 = new Thread(
+                () -> {
+                    while (!queue.isEmpty() || !Thread.currentThread().isInterrupted()) {
+                        try {
+                            buffer.add(queue.poll());
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                        }
+                    }
+                }
+        );
+        producer.start();
+        consumer.start();
+
+        producer.join();
+
+        consumer.interrupt();
+        consumer1.interrupt();
+        consumer.join();
+        consumer1.join();
+        assertThat(buffer, equalTo(Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9)));
+    }
 }
