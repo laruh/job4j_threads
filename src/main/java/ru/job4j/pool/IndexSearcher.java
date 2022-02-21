@@ -16,7 +16,7 @@ public class IndexSearcher<T> extends RecursiveTask<Integer> {
         this.elem = elem;
     }
 
-    public int findIndex(T[] array, int fromInd, int toInd, T elem) {
+    public int findIndex() {
         int rsl = -1;
         for (int i = fromInd; i <= toInd; i++) {
             if (elem.equals(array[i])) {
@@ -29,7 +29,7 @@ public class IndexSearcher<T> extends RecursiveTask<Integer> {
     @Override
     protected Integer compute() {
         if (fromInd - toInd < 10) {
-           return findIndex(array, fromInd, toInd, elem);
+           return findIndex();
         }
         int mid = (fromInd + toInd) / 2;
         IndexSearcher<T> leftSearch = new IndexSearcher(array, fromInd, mid, elem);
@@ -38,7 +38,7 @@ public class IndexSearcher<T> extends RecursiveTask<Integer> {
         rightSearch.fork();
         int left = leftSearch.join();
         int right = rightSearch.join();
-        return findIndex(array, left, right, elem);
+        return left == -1 ? right : left;
     }
 
     public static <T> int find(T[] array, T elem) {
