@@ -21,6 +21,7 @@ public class IndexSearcher<T> extends RecursiveTask<Integer> {
         for (int i = fromInd; i <= toInd; i++) {
             if (elem.equals(array[i])) {
                 rsl = i;
+                break;
             }
         }
         return rsl;
@@ -38,11 +39,11 @@ public class IndexSearcher<T> extends RecursiveTask<Integer> {
         rightSearch.fork();
         int left = leftSearch.join();
         int right = rightSearch.join();
-        return left == -1 ? right : left;
+        return Math.max(left, right);
     }
 
-    public static <T> int find(T[] array, T elem) {
+    public static <T> int find(T[] array, int fromInd, int toInd, T elem) {
         ForkJoinPool forkJoinPool = new ForkJoinPool();
-        return forkJoinPool.invoke(new IndexSearcher<>(array, 0, array.length, elem));
+        return forkJoinPool.invoke(new IndexSearcher<T>(array, fromInd, toInd, elem));
     }
 }
