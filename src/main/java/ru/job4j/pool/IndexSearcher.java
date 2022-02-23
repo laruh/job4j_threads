@@ -42,8 +42,8 @@ public class IndexSearcher<T> extends RecursiveTask<Integer> {
         return Math.max(left, right);
     }
 
-    public static <T> int find(T[] array, int fromInd, int toInd, T elem) {
+    public static <T> int find(T[] array, T elem) {
         ForkJoinPool forkJoinPool = new ForkJoinPool();
-        return forkJoinPool.invoke(new IndexSearcher<T>(array, fromInd, toInd, elem));
+        return forkJoinPool.invoke(new IndexSearcher<T>(array, 0, array.length - 1, elem));
     }
 }
