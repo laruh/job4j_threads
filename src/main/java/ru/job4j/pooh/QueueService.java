@@ -21,8 +21,11 @@ public class QueueService implements Service {
             }
         } else if ("GET".equals(type)) {
             ConcurrentLinkedQueue<String> currentQueue = queues.get(nameQueue);
-            if (currentQueue != null && currentQueue.peek() != null) {
-                rsl = new Resp(currentQueue.poll(), "200 OK");
+            if (currentQueue != null) {
+                String paramFromQueue = currentQueue.poll();
+                if (paramFromQueue != null) {
+                    rsl = new Resp(paramFromQueue, "200 OK");
+                }
             }
         }
         return rsl;
