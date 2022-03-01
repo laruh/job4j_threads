@@ -13,15 +13,14 @@ public class QueueService implements Service {
         String type = req.httpRequestType();
         String nameQueue = req.getSourceName();
         String param = req.getParam();
-        queues.putIfAbsent(nameQueue, new ConcurrentLinkedQueue<>());
-        ConcurrentLinkedQueue<String> queue = queues.get(nameQueue);
         if ("POST".equals(type)) {
-            queue.offer(param);
+            queues.putIfAbsent(nameQueue, new ConcurrentLinkedQueue<>());
+            queues.get(nameQueue).offer(param);
             if (param != null) {
                 rsl = new Resp(param, "201 Created");
             }
         } else if ("GET".equals(type)) {
-            String info = queue.poll();
+            String info = queues.get(nameQueue).poll();
             if (info != null) {
                 rsl = new Resp(info, "200 OK");
             }
