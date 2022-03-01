@@ -9,6 +9,7 @@ public class QueueService implements Service {
 
     @Override
     public Resp process(Req req) {
+        Resp rsl = new Resp("", "204 No Content");
         String type = req.httpRequestType();
         String nameQueue = req.getSourceName();
         String param = req.getParam();
@@ -16,11 +17,15 @@ public class QueueService implements Service {
         ConcurrentLinkedQueue<String> queue = queues.get(nameQueue);
         if ("POST".equals(type)) {
             queue.offer(param);
-            return param != null ? new Resp(param, "200") : new Resp("", "204");
+            if (param != null) {
+                rsl = new Resp(param, "201 Created");
+            }
         } else if ("GET".equals(type)) {
-            String rsl = queue.poll();
-            return rsl != null ? new Resp(rsl, "200") : new Resp("", "204");
+            String info = queue.poll();
+            if (info != null) {
+                rsl = new Resp(info, "200 OK");
+            }
         }
-        return null;
+        return rsl;
     }
 }

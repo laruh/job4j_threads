@@ -24,7 +24,7 @@ public class QueueServiceTest {
                 new Req("GET", "queue", "weather", null));
         assertThat(result.text(), is("temperature=18"));
         assertThat(result1.text(), is("temperature=13"));
-        assertThat(result2.status(), is("204"));
+        assertThat(result2.status(), is("204 No Content"));
         assertThat(result2.text(), is(""));
     }
 }
