@@ -27,4 +27,14 @@ public class QueueServiceTest {
         assertThat(result2.status(), is("204 No Content"));
         assertThat(result2.text(), is(""));
     }
+
+    @Test
+    public void whenQueueServiceTesting() {
+        QueueService queueService = new QueueService();
+        String otherSourceName = "other";
+        Resp resultFromOtherSource1 = queueService.process(
+                new Req("GET", "queue", otherSourceName, null)
+        );
+        assertThat(resultFromOtherSource1.text(), is(""));
+    }
 }
