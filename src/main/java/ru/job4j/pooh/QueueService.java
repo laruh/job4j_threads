@@ -21,7 +21,7 @@ public class QueueService implements Service {
             }
         } else if ("GET".equals(type)) {
             String info = queues.get(nameQueue).poll();
-            if (info != null) {
+            if (queues.get(nameQueue) != null && info != null) {
                 rsl = new Resp(info, "200 OK");
             }
         }
