@@ -35,6 +35,6 @@ public class TopicServiceTest {
         assertThat(result2.text(), is(""));
         assertThat(result3.text(), is("temperature=18"));
         assertThat(result4.text(), is("temperature=42"));
-        assertThat(result5.status(), is("204"));
+        assertThat(result5.status(), is("204 No Content"));
     }
 }
